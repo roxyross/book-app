@@ -43,8 +43,10 @@ function extractToc(mdxContent: string) {
 export default async function ChapterPage({ params }: ChapterPageProps) {
   const { chapterId, topicId } = params;
 
-  // Add validation to ensure params are defined
-  if (!chapterId || !topicId) {
+  // Add more robust validation to ensure params are defined and are valid
+  if (!chapterId || !topicId ||
+      isNaN(Number(chapterId)) || isNaN(Number(topicId)) ||
+      Number(chapterId) <= 0 || Number(topicId) <= 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -92,16 +94,30 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
     );
   } catch (error) {
     console.error('Error reading MDX file:', error);
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">Chapter Not Found</h1>
-          <p className="text-zinc-600 dark:text-zinc-400">
-            The requested chapter ({chapterId}) or topic ({topicId}) does not exist.
-          </p>
+    // Check if the error is due to the file not existing
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-2">Chapter Not Found</h1>
+            <p className="text-zinc-600 dark:text-zinc-400">
+              The requested chapter file ({fileName}) does not exist.
+            </p>
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-2">Error Loading Chapter</h1>
+            <p className="text-zinc-600 dark:text-zinc-400">
+              An error occurred while loading the chapter content.
+            </p>
+          </div>
+        </div>
+      );
+    }
   }
 }
 
