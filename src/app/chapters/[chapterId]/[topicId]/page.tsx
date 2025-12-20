@@ -43,6 +43,20 @@ function extractToc(mdxContent: string) {
 export default async function ChapterPage({ params }: ChapterPageProps) {
   const { chapterId, topicId } = params;
 
+  // Add validation to ensure params are defined
+  if (!chapterId || !topicId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">Invalid Chapter Path</h1>
+          <p className="text-zinc-600 dark:text-zinc-400">
+            Please provide valid chapter and topic IDs.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // Determine the correct file path based on chapterId and topicId
   let fileName: string;
   if (topicId === '1') {

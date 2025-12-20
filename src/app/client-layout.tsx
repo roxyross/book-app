@@ -5,6 +5,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { useSidebar } from "./providers";
 import { navigation } from "@/lib/navigation";
 import { ReactNode } from "react";
+import { Footer } from "@/components/ui/Footer";
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
   const { sidebarOpen, toggleSidebar, closeSidebar } = useSidebar();
@@ -22,6 +23,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
         <main className="flex-1 bg-background transition-all duration-300">
           {children}
         </main>
+        <Footer />
       </div>
     </>
   );
