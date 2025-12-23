@@ -1,39 +1,4 @@
-// import { betterAuth } from "better-auth";
-
-// // For Vercel serverless deployment, we need to handle the database differently
-// // SQLite doesn't work well in serverless environments, so we need to use a database URL
-// const authInstance = betterAuth({
-//   secret: process.env.BETTER_AUTH_SECRET || "your-secret-key-change-in-production",
-//   database: {
-//     provider: "sqlite",
-//     url: process.env.DATABASE_URL || "./db.sqlite",
-//   },
-//   // Custom user fields for roles
-//   user: {
-//     additionalFields: {
-//       role: {
-//         type: "string",
-//         required: true,
-//         default: "user"  // Default role is user
-//       }
-//     }
-//   },
-//   plugins: [
-//     // Add any additional plugins here
-//   ]
-// });
-
-// // Export the auth instance
-// export const auth = authInstance;
 import { betterAuth } from "better-auth";
-import { Pool } from "pg";
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL!,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
 
 let authInstance;
 if (process.env.VERCEL_ENV === 'production' && !process.env.DATABASE_URL) {
@@ -43,13 +8,12 @@ if (process.env.VERCEL_ENV === 'production' && !process.env.DATABASE_URL) {
     // No database for serverless compatibility
   });
 } else {
-  // Normal configuration for local development
+  // Configuration for PostgreSQL database
   authInstance = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET || "your-secret-key-change-in-production",
     database: {
-      provider: "postgres",
-      url: process.env.DATABASE_URL!,
-      pool,
+      provider: "postgresql",
+      url: process.env.DATABASE_URL || "",
     },
     user: {
       additionalFields: {

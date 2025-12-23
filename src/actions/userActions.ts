@@ -13,16 +13,18 @@ export async function updateUserRole(userId: string, newRole: string) {
   });
 
   // Check if user is admin
-  if (!session || !isAdmin(session.user.role as any)) {
+  if (!session || !isAdmin((session.user as any).role)) {
     throw new Error("Unauthorized: Only admins can update user roles");
   }
 
   try {
     // Update user role in the database
-    const stmt = db.prepare('UPDATE user SET role = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?');
-    const result = stmt.run(newRole, userId);
+    const result = await db.query(
+      'UPDATE "user" SET role = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      [newRole, userId]
+    );
 
-    if (result.changes === 0) {
+    if (result.rowCount === 0) {
       throw new Error("User not found");
     }
 
@@ -45,14 +47,16 @@ export async function getAllUsers() {
   });
 
   // Check if user is admin
-  if (!session || !isAdmin(session.user.role as any)) {
+  if (!session || !isAdmin((session.user as any).role)) {
     throw new Error("Unauthorized: Only admins can view all users");
   }
 
   try {
     // Fetch all users from the database
-    const stmt = db.prepare('SELECT id, email, name, role, created_at FROM user ORDER BY created_at DESC');
-    const users = stmt.all();
+    const result = await db.query(
+      'SELECT id, email, name, role, created_at FROM "user" ORDER BY created_at DESC'
+    );
+    const users = result.rows;
 
     return {
       users: users.map((user: any) => ({

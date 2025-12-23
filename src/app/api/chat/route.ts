@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   });
 
     // Check if user is authenticated and has permission to use chatbot
-    if (!session || !hasPermission(session.user.role as any, "use:chatbot")) {
+    if (!session || !hasPermission((session.user as any).role, "use:chatbot")) {
       return new Response(
         JSON.stringify({
           error: "Unauthorized: You don't have permission to use the chatbot"

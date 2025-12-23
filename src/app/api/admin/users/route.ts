@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
       headers: request.headers,
     });
 
-    if (!session || !isAdmin(session.user.role as any)) {
+    if (!session || !isAdmin((session.user as any).role)) {
       return new Response(
         JSON.stringify({ error: "Unauthorized: Only admins can view all users" }),
         { status: 401, headers: { "Content-Type": "application/json" } }

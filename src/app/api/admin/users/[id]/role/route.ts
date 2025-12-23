@@ -20,7 +20,7 @@ export async function PUT(
       headers: request.headers,
     });
 
-    if (!session || !isAdmin(session.user.role as any)) {
+    if (!session || !isAdmin((session.user as any).role)) {
       return new Response(
         JSON.stringify({ error: "Unauthorized: Only admins can update user roles" }),
         { status: 401, headers: { "Content-Type": "application/json" } }
