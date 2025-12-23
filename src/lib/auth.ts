@@ -26,6 +26,14 @@
 // // Export the auth instance
 // export const auth = authInstance;
 import { betterAuth } from "better-auth";
+import { Pool } from "pg";
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL!,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
 
 let authInstance;
 if (process.env.VERCEL_ENV === 'production' && !process.env.DATABASE_URL) {
@@ -39,8 +47,9 @@ if (process.env.VERCEL_ENV === 'production' && !process.env.DATABASE_URL) {
   authInstance = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET || "your-secret-key-change-in-production",
     database: {
-      provider: "sqlite",
-      url: process.env.DATABASE_URL || "./db.sqlite",
+      provider: "postgres",
+      url: process.env.DATABASE_URL!,
+      pool,
     },
     user: {
       additionalFields: {
