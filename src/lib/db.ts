@@ -1,5 +1,8 @@
 import { Pool } from 'pg';
 
+// console.log("DATABASE_URL AT RUNTIME:", process.env.DATABASE_URL);
+
+
 // Initialize the PostgreSQL connection pool
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
