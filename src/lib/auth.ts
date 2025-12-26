@@ -18,10 +18,10 @@ if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is not set");
 }
   authInstance = betterAuth({
-    secret: process.env.BETTER_AUTH_SECRET || "1KLLkSc9zISlUgF5y/gvxll8ZuZToUecY030a1RrmTg=",
+    secret: process.env.BETTER_AUTH_SECRET,
     database: {
       provider: "postgresql",
-      url: process.env.DATABASE_URL || "postgresql://neondb_owner:npg_p6ehnC3avcoQ@ep-snowy-boat-ahacpm9f-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
+      url: process.env.DATABASE_URL,
     },
     user: {
       additionalFields: {
