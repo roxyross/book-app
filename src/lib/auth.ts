@@ -9,6 +9,14 @@ let authInstance;
 //   });
 // } else {
   // Configuration for PostgreSQL database
+
+  if (!process.env.BETTER_AUTH_SECRET) {
+  throw new Error("BETTER_AUTH_SECRET is not set");
+}
+
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is not set");
+}
   authInstance = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET || "1KLLkSc9zISlUgF5y/gvxll8ZuZToUecY030a1RrmTg=",
     database: {
